@@ -37,6 +37,15 @@ At each step we score a candidate with
 \]
 In implementation notes we write \texttt{top\_k}, \texttt{mask\_fill}, and
 \verb|\mathrm{O}(kV)| often enough that they are worth drilling as muscle memory.`,
+  String.raw`\begin{algorithm}
+\caption{Speculative Decode}
+\KwIn{$x$, draft model $q$, verifier $p$}
+\KwOut{$y^\star$}
+\end{algorithm}
+\begin{tikzpicture}
+  \draw[->] (0,0) -- (2,0);
+\end{tikzpicture}
+We also benchmark \mintinline{python}{prefill(tokens)} and stash traces in \verb|std::vector<Node>|.`,
 ];
 
 let demoIndex = 0;
@@ -155,14 +164,6 @@ function tokenizeText(source) {
 
 function cleanTextForDisplay(source) {
   return source
-    .replace(/\\(sub)*section\*?\{([^}]*)\}/g, "\n$2\n")
-    .replace(/\\begin\{(theorem|proof|align|equation|gather)\*?\}/g, "\n")
-    .replace(/\\end\{(theorem|proof|align|equation|gather)\*?\}/g, "\n")
-    .replace(/\\item\b/g, "•")
-    .replace(/\\,/g, " ")
-    .replace(/\\;/g, " ")
-    .replace(/\\:/g, " ")
-    .replace(/\\!/g, "")
     .replace(/\n{3,}/g, "\n\n");
 }
 
@@ -170,7 +171,21 @@ function queueMathTypeset() {
   if (!window.MathJax?.typesetPromise) {
     return;
   }
-  window.MathJax.typesetPromise([renderedPreview]).catch(() => {});
+
+  const mathNodes = [...renderedPreview.querySelectorAll(".render-segment.math")];
+  mathNodes.reduce(
+    (promise, node) => promise.then(async () => {
+      try {
+        await window.MathJax.typesetPromise([node]);
+      } catch (error) {
+        const raw = node.getAttribute("data-raw") || "";
+        node.classList.add("fallback-text");
+        node.classList.remove("math");
+        node.textContent = raw;
+      }
+    }),
+    Promise.resolve()
+  ).catch(() => {});
 }
 
 function buildDisplaySegments(source) {
@@ -184,13 +199,15 @@ function buildDisplaySegments(source) {
     if (match.index > cursor) {
       const rawText = source.slice(cursor, match.index);
       const tokens = tokenizeText(rawText);
-      segments.push({
-        kind: "text",
-        rawText,
-        displayText: cleanTextForDisplay(rawText),
-        startUnitIndex: unitCursor,
-        endUnitIndex: unitCursor + tokens.length,
-      });
+      for (let index = 0; index < tokens.length; index += 1) {
+        const token = tokens[index];
+        segments.push({
+          kind: token.isWhitespace ? "space" : "text",
+          rawText: token.text,
+          displayText: cleanTextForDisplay(token.text),
+          unitIndex: unitCursor + index,
+        });
+      }
       unitCursor += tokens.length;
     }
 
@@ -210,19 +227,28 @@ function buildDisplaySegments(source) {
   if (cursor < source.length) {
     const rawText = source.slice(cursor);
     const tokens = tokenizeText(rawText);
-    segments.push({
-      kind: "text",
-      rawText,
-      displayText: cleanTextForDisplay(rawText),
-      startUnitIndex: unitCursor,
-      endUnitIndex: unitCursor + tokens.length,
-    });
+    for (let index = 0; index < tokens.length; index += 1) {
+      const token = tokens[index];
+      segments.push({
+        kind: token.isWhitespace ? "space" : "text",
+        rawText: token.text,
+        displayText: cleanTextForDisplay(token.text),
+        unitIndex: unitCursor + index,
+      });
+    }
   }
 
-  return segments.filter((segment) => segment.displayText.trim().length > 0);
+  return segments.filter((segment) => segment.kind === "space" || segment.displayText.length > 0);
 }
 
 function getSegmentStatus(segment) {
+  if (segment.kind === "text") {
+    if (segment.unitIndex === state.currentUnitIndex) {
+      return null;
+    }
+    return state.unitResults[segment.unitIndex] || null;
+  }
+
   let hasCommitted = false;
   let allExact = true;
   let hasIncorrect = false;
@@ -276,12 +302,25 @@ function renderPreview() {
 
   renderedPreview.innerHTML = state.displaySegments
     .map((segment) => {
+      if (segment.kind === "space") {
+        return `<span class="render-segment prose-space">${escapeHtml(segment.displayText)}</span>`;
+      }
+
+      if (segment.kind === "text") {
+        return formatWordUnit(
+          segment.displayText,
+          getSegmentStatus(segment),
+          segment.unitIndex === state.currentUnitIndex ? state.typedBuffer : "",
+          segment.unitIndex === state.currentUnitIndex
+        );
+      }
+
       const status = getSegmentStatus(segment);
       const statusClass = status ? ` ${status}` : "";
       if (segment.kind === "math") {
-        return `<span class="render-segment math${statusClass}">${segment.displayText}</span>`;
+        return `<span class="render-segment math${statusClass}" data-raw="${escapeHtml(segment.displayText)}">${escapeHtml(segment.displayText)}</span>`;
       }
-      return `<span class="render-segment prose${statusClass}">${escapeHtml(segment.displayText)}</span>`;
+      return "";
     })
     .join("");
 

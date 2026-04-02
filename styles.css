@@ -136,7 +136,8 @@ button:disabled {
 }
 
 .ghost-button.active {
-  background: rgba(17, 17, 17, 0.08);
+  color: #ffffff;
+  background: #111111;
 }
 
 .stats-row {
@@ -220,6 +221,11 @@ button:disabled {
   transition: color 140ms ease, background-color 140ms ease, opacity 140ms ease;
 }
 
+.render-segment.fallback-text {
+  font-family: "CMU Typewriter Text", "Computer Modern Typewriter", monospace;
+  white-space: pre-wrap;
+}
+
 .render-segment.correct {
   color: rgba(17, 17, 17, 0.95);
 }
@@ -232,6 +238,26 @@ button:disabled {
 .render-segment.incorrect {
   color: var(--bad);
   background: rgba(176, 0, 32, 0.08);
+}
+
+.render-segment.math {
+  color: rgba(17, 17, 17, 0.55);
+}
+
+.render-segment.math.correct {
+  color: rgba(17, 17, 17, 0.82);
+}
+
+.render-segment.math.current {
+  color: rgba(17, 17, 17, 0.82);
+}
+
+.render-segment.math.incorrect {
+  color: var(--bad);
+}
+
+.render-segment.prose-space {
+  white-space: pre-wrap;
 }
 
 .target-text {
@@ -295,6 +321,10 @@ button:disabled {
   color: var(--muted);
   font-size: 0.82rem;
   font-family: "CMU Sans Serif", "Computer Modern Sans", sans-serif;
+}
+
+.site-footer p {
+  margin: 0.2rem 0;
 }
 
 @media (max-width: 960px) {
