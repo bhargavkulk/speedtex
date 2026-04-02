@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SpeedTeX</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/computer-modern@0.1.2/build/cmun-serif.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/computer-modern@0.1.2/build/cmun-sans.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/computer-modern@0.1.2/build/cmun-typewriter.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="masthead">
+        <h1>SpeedTeX</h1>
+      </header>
+
+      <main class="workspace">
+        <section class="test-panel">
+          <div class="stats-row">
+            <article class="stat-pill">
+              <span class="stat-label">WPM</span>
+              <strong id="wpm-stat">0</strong>
+            </article>
+            <article class="stat-pill">
+              <span class="stat-label">Accuracy</span>
+              <strong id="accuracy-stat">100%</strong>
+            </article>
+            <article class="stat-pill">
+              <span class="stat-label">Progress</span>
+              <strong id="progress-stat">0%</strong>
+            </article>
+          </div>
+
+          <div class="test-surface">
+            <div class="surface-head">
+              <div class="control-row">
+                <button id="paste-button" class="primary-button">Paste LaTeX</button>
+                <button id="file-button" class="ghost-button">Open .tex</button>
+                <button id="demo-button" class="ghost-button">Load Demo</button>
+                <button id="reset-button" class="ghost-button" disabled>Reset</button>
+              </div>
+            </div>
+
+            <div id="target-text" class="target-text" aria-live="polite" tabindex="0" role="textbox" aria-label="Typing test">
+              Paste a LaTeX document to begin.
+            </div>
+          </div>
+
+          <textarea id="latex-input" class="hidden-source" spellcheck="false"></textarea>
+          <input id="file-input" class="hidden-source" type="file" accept=".tex,text/x-tex,text/plain" />
+        </section>
+      </main>
+
+      <footer class="site-footer">Made by an Agent</footer>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
