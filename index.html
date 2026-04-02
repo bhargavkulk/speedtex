@@ -6,17 +6,32 @@
     <title>SpeedTeX</title>
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/computer-modern@0.1.2/build/cmun-serif.css"
+      href="https://cdn.jsdelivr.net/npm/computer-modern@0.1.3/cmu-serif.css"
     />
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/computer-modern@0.1.2/build/cmun-sans.css"
+      href="https://cdn.jsdelivr.net/npm/computer-modern@0.1.3/cmu-sans-serif.css"
     />
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/computer-modern@0.1.2/build/cmun-typewriter.css"
+      href="https://cdn.jsdelivr.net/npm/computer-modern@0.1.3/cmu-typewriter-text.css"
     />
     <link rel="stylesheet" href="styles.css" />
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [["$", "$"], ["\\(", "\\)"]],
+          displayMath: [["\\[", "\\]"]],
+        },
+        svg: {
+          fontCache: "global",
+        },
+      };
+    </script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
+    ></script>
   </head>
   <body>
     <div class="page-shell">
@@ -46,11 +61,13 @@
               <div class="control-row">
                 <button id="paste-button" class="primary-button">Paste LaTeX</button>
                 <button id="file-button" class="ghost-button">Open .tex</button>
-                <button id="demo-button" class="ghost-button">Load Demo</button>
+                <button id="demo-button" class="ghost-button">Next Demo</button>
+                <button id="knuth-button" class="ghost-button" aria-pressed="false">Knuth Mode</button>
                 <button id="reset-button" class="ghost-button" disabled>Reset</button>
               </div>
             </div>
 
+            <div id="rendered-preview" class="rendered-preview" aria-live="polite" tabindex="0" role="textbox" aria-label="Rendered typing test"></div>
             <div id="target-text" class="target-text" aria-live="polite" tabindex="0" role="textbox" aria-label="Typing test">
               Paste a LaTeX document to begin.
             </div>

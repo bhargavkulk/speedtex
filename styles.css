@@ -135,6 +135,10 @@ button:disabled {
   background: transparent;
 }
 
+.ghost-button.active {
+  background: rgba(17, 17, 17, 0.08);
+}
+
 .stats-row {
   display: flex;
   justify-content: center;
@@ -179,6 +183,57 @@ button:disabled {
   margin-bottom: 0.65rem;
 }
 
+.rendered-preview {
+  display: none;
+  min-height: 3.5rem;
+  margin-bottom: 0.85rem;
+  padding: 0.15rem 0 0.75rem;
+  border-bottom: 1px solid rgba(17, 17, 17, 0.08);
+  color: rgba(17, 17, 17, 0.82);
+  line-height: 1.55;
+  white-space: pre-wrap;
+  font-size: 1rem;
+  font-family: "CMU Typewriter Text", "Computer Modern Typewriter", monospace;
+}
+
+.rendered-preview .MathJax {
+  font-size: 1rem;
+}
+
+.rendered-preview:focus {
+  outline: none;
+}
+
+.rendered-preview.active {
+  color: rgba(17, 17, 17, 0.92);
+}
+
+.knuth-mode .rendered-preview {
+  display: block;
+}
+
+.knuth-mode .target-text {
+  display: none;
+}
+
+.render-segment {
+  transition: color 140ms ease, background-color 140ms ease, opacity 140ms ease;
+}
+
+.render-segment.correct {
+  color: rgba(17, 17, 17, 0.95);
+}
+
+.render-segment.current {
+  color: rgba(17, 17, 17, 0.95);
+  background: rgba(17, 17, 17, 0.06);
+}
+
+.render-segment.incorrect {
+  color: var(--bad);
+  background: rgba(176, 0, 32, 0.08);
+}
+
 .target-text {
   min-height: 10rem;
   padding: 0.2rem 0 0.6rem;
@@ -188,7 +243,6 @@ button:disabled {
   font-size: 1rem;
   color: rgba(17, 17, 17, 0.35);
   font-family: "CMU Typewriter Text", "Computer Modern Typewriter", monospace;
-  border-bottom: 1px solid var(--line);
   cursor: text;
 }
 
@@ -216,6 +270,11 @@ button:disabled {
 .char.current {
   background: rgba(17, 17, 17, 0.08);
   box-shadow: 0 0 0 1px rgba(17, 17, 17, 0.08);
+}
+
+.char.extra {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
 }
 
 .hidden-source {
