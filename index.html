@@ -3,34 +3,37 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data:; font-src 'self' https://cdn.jsdelivr.net; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+    />
+    <meta name="referrer" content="no-referrer" />
     <title>SpeedTeX</title>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/computer-modern@0.1.3/cmu-serif.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
     />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/computer-modern@0.1.3/cmu-sans-serif.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
     />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/computer-modern@0.1.3/cmu-typewriter-text.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
     />
     <link rel="stylesheet" href="styles.css" />
-    <script>
-      window.MathJax = {
-        tex: {
-          inlineMath: [["$", "$"], ["\\(", "\\)"]],
-          displayMath: [["\\[", "\\]"]],
-        },
-        svg: {
-          fontCache: "global",
-        },
-      };
-    </script>
+    <script src="mathjax-config.js"></script>
     <script
       defer
       src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
     ></script>
   </head>
   <body>
@@ -80,7 +83,7 @@
 
       <footer class="site-footer">
         <p>Made by an Agent</p>
-        <p>This page is hosted on GitHub Pages, so it inherits its privacy policies.</p>
+        <p>Pasted and uploaded LaTeX stays in the browser, but the page loads MathJax and font assets from jsDelivr.</p>
       </footer>
     </div>
 
